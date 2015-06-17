@@ -3,3 +3,4 @@
 #
 capability_names.h
 rlim_names.h
+net_names.h
