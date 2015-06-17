@@ -5,10 +5,8 @@
 	system('rm -f /usr/sbin/trafficsqueezerd');
 
 	system("rm -rf ./*~");
-	system("rm -rf ./saas_gui/db_saas/*~");
-	system("rm -rf ./saas_gui/html/*~");
-	system("rm -rf ./saas_gui/html/c/*~");
-	system("rm -rf ./saas_gui/html/php/*~");
+	system("rm -rf ./html/*~");
+	system("rm -rf ./html/c/*~");
+	system("rm -rf ./html/php/*~");
 	system("rm -rf ./etc/init.d/*~");
-	system("rm -rf ../*~");
 ?>
