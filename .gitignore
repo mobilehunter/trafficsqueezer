@@ -26,6 +26,7 @@ signing_key.*
 *.genkey
 Module.symvers
 System.map
+objs
 
 #
 # git files that we don't want to ignore even it they are dot-files
@@ -33,6 +34,7 @@ System.map
 !.gitignore
 !.mailmap
 !.config
+
 #
 # Generated include files
 #
