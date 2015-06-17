@@ -42,9 +42,9 @@ objs
 */include/linux/version.h
 */include/generated
 */generated
-ubuntu-kernel/debian/
-ubuntu-kernel/vmlinux
-ubuntu-kernel/arch/x86/include/generated/
+kernel-src/debian/
+kernel-src/vmlinux
+kernel-src/arch/x86/include/generated/
 
 # Precompiled Headers
 *.gch

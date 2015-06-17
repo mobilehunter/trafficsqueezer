@@ -32,29 +32,29 @@ MOD_OBJS   = \
 	PhysHeap.o \
 	SysHlp.o \
 	VMMDev.o \
-	r0drv/alloc-r0drv.o \
-	r0drv/initterm-r0drv.o \
-	r0drv/memobj-r0drv.o \
-	r0drv/mpnotification-r0drv.o \
-	r0drv/powernotification-r0drv.o \
-	r0drv/linux/alloc-r0drv-linux.o \
-	r0drv/linux/assert-r0drv-linux.o \
-	r0drv/linux/initterm-r0drv-linux.o \
-	r0drv/linux/memobj-r0drv-linux.o \
-	r0drv/linux/memuserkernel-r0drv-linux.o \
-	r0drv/linux/mp-r0drv-linux.o \
-	r0drv/linux/mpnotification-r0drv-linux.o \
-	r0drv/linux/process-r0drv-linux.o \
-	r0drv/linux/semevent-r0drv-linux.o \
-	r0drv/linux/semeventmulti-r0drv-linux.o \
-	r0drv/linux/semfastmutex-r0drv-linux.o \
-	r0drv/linux/semmutex-r0drv-linux.o \
-	r0drv/linux/spinlock-r0drv-linux.o \
-	r0drv/linux/thread-r0drv-linux.o \
-	r0drv/linux/thread2-r0drv-linux.o \
-	r0drv/linux/time-r0drv-linux.o \
-	r0drv/linux/RTLogWriteDebugger-r0drv-linux.o \
-	r0drv/generic/semspinmutex-r0drv-generic.o \
+	../r0drv/alloc-r0drv.o \
+	../r0drv/initterm-r0drv.o \
+	../r0drv/memobj-r0drv.o \
+	../r0drv/mpnotification-r0drv.o \
+	../r0drv/powernotification-r0drv.o \
+	../r0drv/linux/alloc-r0drv-linux.o \
+	../r0drv/linux/assert-r0drv-linux.o \
+	../r0drv/linux/initterm-r0drv-linux.o \
+	../r0drv/linux/memobj-r0drv-linux.o \
+	../r0drv/linux/memuserkernel-r0drv-linux.o \
+	../r0drv/linux/mp-r0drv-linux.o \
+	../r0drv/linux/mpnotification-r0drv-linux.o \
+	../r0drv/linux/process-r0drv-linux.o \
+	../r0drv/linux/semevent-r0drv-linux.o \
+	../r0drv/linux/semeventmulti-r0drv-linux.o \
+	../r0drv/linux/semfastmutex-r0drv-linux.o \
+	../r0drv/linux/semmutex-r0drv-linux.o \
+	../r0drv/linux/spinlock-r0drv-linux.o \
+	../r0drv/linux/thread-r0drv-linux.o \
+	../r0drv/linux/thread2-r0drv-linux.o \
+	../r0drv/linux/time-r0drv-linux.o \
+	../r0drv/linux/RTLogWriteDebugger-r0drv-linux.o \
+	../r0drv/generic/semspinmutex-r0drv-generic.o \
 	common/alloc/alloc.o \
 	common/err/RTErrConvertFromErrno.o \
 	common/err/RTErrConvertToErrno.o \
@@ -119,11 +119,11 @@ endif
 MOD_INCL  = $(addprefix -I$(KBUILD_EXTMOD),/ /include /r0drv/linux)
 MOD_INCL += $(addprefix -I$(KBUILD_EXTMOD)/vboxguest,/ /include /r0drv/linux)
 
-ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxguest),)
- MANGLING := $(KBUILD_EXTMOD)/vboxguest/include/VBox/VBoxGuestMangling.h
-else
+#ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxguest),)
+# MANGLING := $(KBUILD_EXTMOD)/vboxguest/include/VBox/VBoxGuestMangling.h
+#else
  MANGLING := $(KBUILD_EXTMOD)/include/VBox/VBoxGuestMangling.h
-endif
+#endif
 ifeq ($(KERN_VERSION),24)
  ## @todo move to MOD_DEFS when we have finished refactoring
  MOD_CFLAGS = -DEXPORT_SYMTAB

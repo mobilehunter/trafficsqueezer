@@ -23,11 +23,11 @@ MOD_NAME   = vboxvideo
 
 MOD_OBJS   = vboxvideo_drm.o
 
-ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxvideo),)
- MANGLING := $(KBUILD_EXTMOD)/vboxvideo/include/VBox/VBoxGuestMangling.h
-else
+#ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxvideo),)
+ #MANGLING := $(KBUILD_EXTMOD)/vboxvideo/include/VBox/VBoxGuestMangling.h
+#else
  MANGLING := $(KBUILD_EXTMOD)/include/VBox/VBoxGuestMangling.h
-endif
+#endif
 MOD_CFLAGS = -Wno-declaration-after-statement -fshort-wchar -include $(MANGLING)
 MOD_INCL   = $(addprefix -I$(KBUILD_EXTMOD),/ /include /r0drv/linux)
 # What on earth is this?

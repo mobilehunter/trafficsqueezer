@@ -47,11 +47,11 @@ MOD_INCL = \
     $(addprefix -I$(KBUILD_EXTMOD),/ /include /r0drv/linux) \
     $(addprefix -I$(KBUILD_EXTMOD)/vboxsf,/ /include /r0drv/linux)
 
-ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxsf),)
- MANGLING := $(KBUILD_EXTMOD)/vboxsf/include/VBox/VBoxGuestMangling.h
-else
+#ifneq ($(wildcard $(KBUILD_EXTMOD)/vboxsf),)
+# MANGLING := $(KBUILD_EXTMOD)/vboxsf/include/VBox/VBoxGuestMangling.h
+#else
  MANGLING := $(KBUILD_EXTMOD)/include/VBox/VBoxGuestMangling.h
-endif
+#endif
 
 MOD_DEFS   = -DRT_OS_LINUX -DIN_RING0 -DIN_RT_R0 \
 	    -DIN_SUP_R0 -DVBOX -DVBOX_WITH_HGCM -DIN_MODULE -DIN_GUEST_R0
