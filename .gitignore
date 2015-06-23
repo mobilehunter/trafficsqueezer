@@ -27,6 +27,7 @@ signing_key.*
 Module.symvers
 System.map
 objs
+.DS_Store
 
 #
 # git files that we don't want to ignore even it they are dot-files
