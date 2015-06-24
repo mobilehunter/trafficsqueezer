@@ -71,3 +71,6 @@ kernel-src/arch/x86/include/generated/
 *.exe
 *.out
 *.app
+
+#Eclipse Project
+Untitled.xcworkspace
