@@ -288,7 +288,7 @@ bool ts_parse_pkt(struct sk_buff *skb, char *flow)
 	else { return false; }
 
 #ifdef CONFIG_TRAFFICSQUEEZER_DEBUG
-	printk("%s %s) ethproto:%d ipproto:%d proto_port:%d ", skb->dev->name, flow, skb->ts_ethproto, skb->ts_ipproto, skb->ts_proto_port);
+	printk("%s %s) ipproto:%d proto_port:%d srcproto_port:%d ", skb->dev->name, flow, skb->ts_ipproto, skb->ts_proto_port, skb->ts_srcproto_port);
 	printk("ts_ip_hdr_size:%d ip_pyld_size:%d \n", skb->ts_ip_hdr_size, skb->ts_ip_pyld_size);
 #endif
 
