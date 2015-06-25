@@ -245,7 +245,6 @@ void reset_ts_skb(struct sk_buff *skb)
 	skb->ts_srcproto_port=0x0000;
 	skb->ts_ip_hdr_size=0;
 	skb->ts_ip_pyld_size=0;
-	skb->ts_ip_hdr=NULL;
 	skb->ts_ip_pyld=NULL;
 	skb->ts_l2_pyld=NULL;
 	skb->ts_l2_hdr_size=0;
@@ -253,44 +252,54 @@ void reset_ts_skb(struct sk_buff *skb)
 
 bool ts_parse_pkt(struct sk_buff *skb, char *flow)
 {	
-	reset_ts_skb(skb);
-	if(!strcmp(skb->dev->name,"lo")) return false;
-	if(ip_is_fragment(ip_hdr(skb)))
-	{	
-		#ifdef CONFIG_TRAFFICSQUEEZER_DEBUG
-		printk("IP Fragmented packet !\n");
-		#endif
-	}
-	if(skb->protocol==htons(ETH_P_IP))
-	{	skb->ts_l2_hdr_size=(skb->len)-ntohs(ip_hdr(skb)->tot_len);
-		skb->ts_ip_hdr=ip_hdr(skb);
-		skb->ts_ipproto=skb->ts_ip_hdr->protocol;
-		skb->ts_l2_pyld=(unsigned char *)ip_hdr(skb);
-		skb->ts_ip_hdr_size=ip_hdrlen(skb);
-		skb->ts_ip_pyld_size=ts_get_ip_pyld_size(skb);
-		skb->ts_ip_pyld=(unsigned char *)(skb->ts_l2_pyld+(size_t)skb->ts_ip_hdr_size);
-
-		if(skb->ts_ipproto==IPPROTO_TS_TCP||skb->ts_ipproto==IPPROTO_TS_UDP||skb->ts_ipproto==IPPROTO_TS_ICMP||skb->ts_ipproto==IPPROTO_TS_SCTP)
-		{ /* do nothing, but allow this packet */ }
-		else if(skb->ts_ipproto==IPPROTO_ICMP)
-		{ /* do nothing, but allow this packet */ }
-		else if(skb->ts_ipproto==IPPROTO_SCTP)
-		{  skb->ts_proto_port=__sctp_proto_port(skb); }
-		else if(skb->ts_ipproto==IPPROTO_TCP) 
-		{	skb->ts_proto_port=__tcp_proto_port(skb); }
-		else if(skb->ts_ipproto==IPPROTO_UDP)
-		{	skb->ts_proto_port=__udp_proto_port(skb); }
-		else { return false; }
-	}
-	else if(skb->protocol==htons(ETH_P_IPV6))
-	{	return false;
-	}
-	else { return false; }
+    reset_ts_skb(skb);
+    if(!strcmp(skb->dev->name,"lo"))    // Ignore lo (Loopback interface)
+        return false;
 
 #ifdef CONFIG_TRAFFICSQUEEZER_DEBUG
-	printk("%s %s) ipproto:%d proto_port:%d srcproto_port:%d ", skb->dev->name, flow, skb->ts_ipproto, skb->ts_proto_port, skb->ts_srcproto_port);
-	printk("ts_ip_hdr_size:%d ip_pyld_size:%d \n", skb->ts_ip_hdr_size, skb->ts_ip_pyld_size);
+    if(ip_is_fragment(ip_hdr(skb)))
+    {
+        // The Internet Protocol (IP) implements datagram fragmentation,
+        // breaking it into smaller pieces, so that packets may be formed
+        // that can pass through a link with a smaller maximum transmission
+        // unit (MTU) than the original datagram size. - from wikipedia.org
+        printk("IP Fragmented packet !\n");
+        // TODO: if receving IP Framgmented packet, should something be implemented???
+    }
 #endif
 
-	return true;
+    if(skb->protocol==htons(ETH_P_IP)) /* Internet Protocol packet  */
+    {
+        skb->ts_l2_hdr_size=(skb->len)-ntohs(ip_hdr(skb)->tot_len);
+        skb->ts_ipproto=skb->ts_ip_hdr->protocol;
+        skb->ts_l2_pyld=(unsigned char *)ip_hdr(skb);
+        skb->ts_ip_hdr_size=ip_hdrlen(skb);
+        skb->ts_ip_pyld_size=ts_get_ip_pyld_size(skb);
+        skb->ts_ip_pyld=(unsigned char *)(skb->ts_l2_pyld+(size_t)skb->ts_ip_hdr_size);
+
+        if(skb->ts_ipproto==IPPROTO_TS_TCP||skb->ts_ipproto==IPPROTO_TS_UDP||skb->ts_ipproto==IPPROTO_TS_ICMP||skb->ts_ipproto==IPPROTO_TS_SCTP) {
+            /* do nothing, but allow this packet */
+        } else if(skb->ts_ipproto==IPPROTO_ICMP) {
+            /* do nothing, but allow this packet */
+        } else if(skb->ts_ipproto==IPPROTO_SCTP) {
+            skb->ts_proto_port=__sctp_proto_port(skb);
+        } else if(skb->ts_ipproto==IPPROTO_TCP) {
+            skb->ts_proto_port=__tcp_proto_port(skb);
+        } else if(skb->ts_ipproto==IPPROTO_UDP) {
+            skb->ts_proto_port=__udp_proto_port(skb);
+        } else {
+            return false;
+        }
+    } else if(skb->protocol==htons(ETH_P_IPV6)) {
+        return false;   // TODO: implementation of IPv6
+    } else {
+        return false;
+    }
+
+#ifdef CONFIG_TRAFFICSQUEEZER_DEBUG
+    printk("%s %s) ipproto:%d proto_port:%d srcproto_port:%d ", skb->dev->name, flow, skb->ts_ipproto, skb->ts_proto_port, skb->ts_srcproto_port);
+    printk("ts_ip_hdr_size:%d ip_pyld_size:%d \n", skb->ts_ip_hdr_size, skb->ts_ip_pyld_size);
+#endif
+
+    return true;
 }

@@ -639,15 +639,14 @@ struct sk_buff {
 	};
 
 #ifdef CONFIG_TRAFFICSQUEEZER
-	__u8			ts_ipproto; //Pkt: tcp/udp/sctp/icmp/etc.
-	__be16		ts_proto_port; //Pkt: HTTP/FTP/DNS/etc
-	__be16		ts_srcproto_port; //Pkt Source Port: HTTP/DNS/etc (eat sourceport)
+	__u8			ts_ipproto;     //Pkt: tcp/udp/sctp/icmp/etc.
+	__be16		ts_proto_port;      //Pkt: HTTP/FTP/DNS/etc
+	__be16		ts_srcproto_port;   //Pkt Source Port: HTTP/DNS/etc (eat sourceport)
 	unsigned int	ts_ip_hdr_size;
 	unsigned int	ts_ip_pyld_size;
-	struct iphdr   *ts_ip_hdr; //direct pointer to ip-hdr (in struct iphdr type - for data-type access)
-	unsigned char	*ts_ip_pyld; //skb->data + ip-hdr-len (start of ip payload)
+	unsigned char	*ts_ip_pyld;    //skb->data + ip-hdr-len (start of ip payload)
 	unsigned int	ts_l2_hdr_size;
-	unsigned char	*ts_l2_pyld; //start of l2 payload (i.e pointing to IP Header - for buffer access)
+	unsigned char	*ts_l2_pyld;    //start of l2 payload (i.e pointing to IP Header - for buffer access)
 #endif
 
 	union {

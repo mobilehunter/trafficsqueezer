@@ -81,20 +81,32 @@ static int get_unoptmem_pos(void)
 static void free_unoptmem(int i) { spin_lock(&unoptmem_lock); unoptmem[i].en=false; spin_unlock(&unoptmem_lock); }
 
 static void finish_pkt(struct sk_buff *skb, bool tspkt)
-{	
-	if(tspkt==true)
-   { if(skb->ts_ip_hdr->protocol==IPPROTO_ICMP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_ICMP; }
-     else if(skb->ts_ip_hdr->protocol==IPPROTO_TCP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_TCP; }
-     else if(skb->ts_ip_hdr->protocol==IPPROTO_UDP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_UDP; }
-     else if(skb->ts_ip_hdr->protocol==IPPROTO_SCTP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_SCTP; }
-   }
-   else
-   {  if(skb->ts_ip_hdr->protocol==IPPROTO_TS_ICMP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_ICMP; }
-      else if(skb->ts_ip_hdr->protocol==IPPROTO_TS_TCP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TCP; }
-      else if(skb->ts_ip_hdr->protocol==IPPROTO_TS_UDP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_UDP; }
-      else if(skb->ts_ip_hdr->protocol==IPPROTO_TS_SCTP) { skb->ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_SCTP; }
-   }
-	ip_send_check(skb->ts_ip_hdr);
+{
+    struct iphdr *ts_ip_hdr = ip_hdr(skb);
+
+    if(tspkt==true)
+    {
+        if(ts_ip_hdr->protocol==IPPROTO_ICMP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_ICMP;
+        } else if(ts_ip_hdr->protocol==IPPROTO_TCP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_TCP;
+        } else if(ts_ip_hdr->protocol==IPPROTO_UDP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_UDP;
+        } else if(ts_ip_hdr->protocol==IPPROTO_SCTP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TS_SCTP;
+        }
+    } else {
+        if(ts_ip_hdr->protocol==IPPROTO_TS_ICMP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_ICMP;
+        } else if(ts_ip_hdr->protocol==IPPROTO_TS_TCP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_TCP;
+        } else if(skb->ts_ip_hdr->protocol==IPPROTO_TS_UDP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_UDP;
+        } else if(skb->ts_ip_hdr->protocol==IPPROTO_TS_SCTP) {
+            ts_ip_hdr->protocol=skb->ts_ipproto=IPPROTO_SCTP;
+        }
+    }
+    ip_send_check(ts_ip_hdr);
 }
 
 void ts_opt(struct sk_buff *skb)
